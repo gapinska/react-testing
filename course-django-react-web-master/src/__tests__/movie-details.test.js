@@ -1,5 +1,5 @@
 import React from "react"
-import { render } from "@testing-library/react"
+import { render, fireEvent } from "@testing-library/react"
 import MovieDetails from "../components/movie-details"
 
 const selectedMovie = {
@@ -31,5 +31,40 @@ describe("MovieDetails component", () => {
     expect(getByTestId("no_ratings").innerHTML).toBe(
       `(${selectedMovie.no_of_ratings})`
     )
+  })
+
+  test("mouseover should highlight the stars", () => {
+    const { container } = render(<MovieDetails movie={selectedMovie} />)
+    const stars = container.querySelectorAll(".rate--container svg")
+    stars.forEach((star, index) => {
+      fireEvent.mouseOver(star)
+      const highlighted_stars = container.querySelectorAll(".purple")
+      expect(highlighted_stars.length).toBe(index + 1)
+    })
+  })
+
+  test("mouseover should unhighlight the stars", () => {
+    const { container } = render(<MovieDetails movie={selectedMovie} />)
+    const stars = container.querySelectorAll(".rate--container svg")
+    stars.forEach((star) => {
+      fireEvent.mouseOver(star)
+      fireEvent.mouseOut(star)
+      const highlighted_stars = container.querySelectorAll(".purple")
+      expect(highlighted_stars.length).toBe(0)
+    })
+  })
+
+  test("click star should trigger rating function to update", () => {
+    const loadMovie = jest.fn()
+    const { container } = render(
+      <MovieDetails movie={selectedMovie} updateMovie={loadMovie} />
+    )
+    const stars = container.querySelectorAll(".rate--container svg")
+    stars.forEach((star) => {
+      fireEvent.click(star)
+      setTimeout(() => {
+        expect(loadMovie).toBeCalledTomes(5)
+      })
+    })
   })
 })
