@@ -1,4 +1,5 @@
 // npm i -D @types/jest
+// npm i -D jest-fetch-mock
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 

@@ -1,5 +1,11 @@
 import React from "react"
-import { render, fireEvent } from "@testing-library/react"
+import {
+  render,
+  fireEvent,
+  getByTestId,
+  screen,
+  waitFor,
+} from "@testing-library/react"
 import MovieDetails from "../components/movie-details"
 
 const selectedMovie = {
@@ -18,6 +24,7 @@ describe("MovieDetails component", () => {
   test("should display title and description", () => {
     const { queryByText } = render(<MovieDetails movie={selectedMovie} />)
     expect(queryByText(selectedMovie.title)).toBeTruthy()
+    expect(queryByText(selectedMovie.description)).toBeTruthy()
   })
 
   test("should display color stars", () => {
@@ -33,37 +40,15 @@ describe("MovieDetails component", () => {
     )
   })
 
-  test("mouseover should highlight the stars", () => {
-    const { container } = render(<MovieDetails movie={selectedMovie} />)
-    const stars = container.querySelectorAll(".rate--container svg")
+  test("mouseover should highlight the stars", async () => {
+    const { container } = render(<MovieDetails />)
+    const stars = container.querySelectorAll(".rate-container svg")
     stars.forEach((star, index) => {
       fireEvent.mouseOver(star)
-      const highlighted_stars = container.querySelectorAll(".purple")
-      expect(highlighted_stars.length).toBe(index + 1)
-    })
-  })
 
-  test("mouseover should unhighlight the stars", () => {
-    const { container } = render(<MovieDetails movie={selectedMovie} />)
-    const stars = container.querySelectorAll(".rate--container svg")
-    stars.forEach((star) => {
-      fireEvent.mouseOver(star)
-      fireEvent.mouseOut(star)
-      const highlighted_stars = container.querySelectorAll(".purple")
-      expect(highlighted_stars.length).toBe(0)
-    })
-  })
-
-  test("click star should trigger rating function to update", () => {
-    const loadMovie = jest.fn()
-    const { container } = render(
-      <MovieDetails movie={selectedMovie} updateMovie={loadMovie} />
-    )
-    const stars = container.querySelectorAll(".rate--container svg")
-    stars.forEach((star) => {
-      fireEvent.click(star)
-      setTimeout(() => {
-        expect(loadMovie).toBeCalledTomes(5)
+      awaitFor(() => {
+        const hoverStars = screen.querySelectorAll(".purple")
+        expect(hoverStars.length).toBe(index + 1)
       })
     })
   })
