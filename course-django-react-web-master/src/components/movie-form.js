@@ -29,7 +29,7 @@ function MovieForm(props) {
   return (
     <React.Fragment>
       {props.movie ? (
-        <div>
+        <div data-testid="movie-form">
           <label htmlFor="title">Title</label>
           <br />
           <input

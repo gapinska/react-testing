@@ -82,7 +82,9 @@ describe("MovieForm component", () => {
     fireEvent.click(submitButton)
 
     await wait(() => {
-      console.log(movieCreated.mock.calls)
+      // expect(movieCreated.mock.calls[0][0]).toStrictEqual(movie)
+      expect(movieCreated).toHaveBeenCalledWith(movie)
+      // console.log(movieCreated.mock.calls[0][0])
     })
   })
 })
